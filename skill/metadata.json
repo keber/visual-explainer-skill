@@ -1,14 +1,19 @@
 {
   "name": "visual-explainer",
-  "version": "1.3.0",
-  "description": "Generate visual explanations (whiteboard, infographic, presentation, diagram, mindmap, mockup) from any content using OpenAI or Gemini image generation",
+  "version": "1.4.0",
+  "description": "Port for GitHub Copilot (VS Code) + PowerShell 5.1 of ericblue/visual-explainer-skill. Generates visual explanations (whiteboard, infographic, presentation, diagram, mindmap, mindmap-structured) from any content using OpenAI or Gemini image generation.",
   "author": {
-    "name": "Eric Blue",
-    "url": "https://eric-blue.com"
+    "name": "keber",
+    "url": "https://github.com/keber"
+  },
+  "fork": {
+    "of": "ericblue/visual-explainer-skill",
+    "author": "Eric Blue",
+    "url": "https://github.com/ericblue/visual-explainer-skill"
   },
   "license": "MIT",
   "created": "2026-04-01",
-  "updated": "2026-04-03",
+  "updated": "2026-05-20",
   "keywords": [
     "visual-explainer",
     "whiteboard",

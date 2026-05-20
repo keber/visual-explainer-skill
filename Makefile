@@ -10,7 +10,8 @@ OPENCLAW_SKILLS_DIR ?= $(HOME)/clawd/skills
 
 .PHONY: help install uninstall version check info \
 	openclaw-install openclaw-uninstall openclaw-check \
-	bump-patch bump-minor bump-major set-version release
+	bump-patch bump-minor bump-major set-version release \
+	install-skills npm-pack
 
 .DEFAULT_GOAL := help
 
@@ -137,3 +138,15 @@ release: check ## Tag and commit a release
 	@git tag -a "v$(VERSION)" -m "Release v$(VERSION)"
 	@echo "Created commit and tag v$(VERSION)"
 	@echo "Run 'git push && git push --tags' to publish"
+
+# ============================================================================
+# GitHub Copilot / VS Code (PowerShell 5.1)
+# ============================================================================
+
+install-skills: ## Install skill to .github/skills/ in the current directory
+	@mkdir -p .github/skills
+	@cp -R .github/skills/visual-explainer .github/skills/visual-explainer
+	@echo "Installed .github/skills/visual-explainer"
+
+npm-pack: ## Pack the npm package (@keber/visual-explainer-skill)
+	npm pack
