@@ -133,6 +133,7 @@ switch ($Task) {
         $m.version = $parts -join '.'
         $m.updated = (Get-Date -Format 'yyyy-MM-dd')
         Save-Metadata $m
+        npm version $m.version --no-git-tag-version | Out-Null
         Write-Host "Version: $old -> $($m.version)" -ForegroundColor Green
     }
 
@@ -145,6 +146,7 @@ switch ($Task) {
         $m.version = $parts -join '.'
         $m.updated = (Get-Date -Format 'yyyy-MM-dd')
         Save-Metadata $m
+        npm version $m.version --no-git-tag-version | Out-Null
         Write-Host "Version: $old -> $($m.version)" -ForegroundColor Green
     }
 
@@ -158,6 +160,7 @@ switch ($Task) {
         $m.version = $parts -join '.'
         $m.updated = (Get-Date -Format 'yyyy-MM-dd')
         Save-Metadata $m
+        npm version $m.version --no-git-tag-version | Out-Null
         Write-Host "Version: $old -> $($m.version)" -ForegroundColor Green
     }
 
@@ -175,6 +178,7 @@ switch ($Task) {
         $m.version = $Arg
         $m.updated = (Get-Date -Format 'yyyy-MM-dd')
         Save-Metadata $m
+        npm version $Arg --no-git-tag-version | Out-Null
         Write-Host "Version: $old -> $Arg" -ForegroundColor Green
     }
 

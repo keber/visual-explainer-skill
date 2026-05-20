@@ -1,6 +1,6 @@
 {
   "name": "@keber/visual-explainer-skill",
-  "version": "1.0.0",
+  "version": "1.4.0",
   "description": "Visual Explainer skill for GitHub Copilot (VS Code) — generates infographics, whiteboards, diagrams and mind maps via PowerShell 5.1",
   "bin": {
     "visual-explainer": "bin/cli.js"
