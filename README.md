@@ -1,3 +1,109 @@
+## GitHub Copilot / VS Code fork from Visual Explainer Skill
+
+> **Fork of [ericblue/visual-explainer-skill](https://github.com/ericblue/visual-explainer-skill)** by [Eric Blue](https://eric-blue.com).
+> This fork is a port for **GitHub Copilot (VS Code)** using **PowerShell 5.1+** instead of bash + curl + jq.
+> The original skill, style templates, and examples are Eric Blue's work — this repository adapts the execution layer for Windows and VS Code.
+
+This section covers installation and usage of the skill in **GitHub Copilot (VS Code)** with **PowerShell 5.1+**, via the `@keber/visual-explainer-skill` npm package.
+
+### Differences from the original skill
+
+| Aspect | Original (Claude Code) | This fork (VS Code) |
+|--------|------------------------|----------------------|
+| Runtime | bash + curl + jq | PowerShell 5.1+ |
+| Install | `make install` | `npm install -g @keber/visual-explainer-skill` |
+| Discovery | `~/.claude/commands/` | `.github/skills/visual-explainer/` |
+| Multi-frame | ✅ supported | ⏳ out of MVP |
+| `--from mermaid` | ✅ supported | ⏳ out of MVP |
+| `--style mockup` | ✅ supported | ⏳ out of MVP |
+| Backends | OpenAI, Gemini | OpenAI gpt-image-1.5, Gemini gemini-2.0-flash-preview-image-generation |
+
+### Requirements
+
+- **PowerShell 5.1+** (included in Windows 10/11; PS 7+ recommended for better performance)
+- **Node.js 16+** (for the install CLI)
+- **OPENAI_API_KEY** or **GEMINI_API_KEY** set as an environment variable
+
+### Installation
+
+```powershell
+# 1. Install the CLI globally
+npm install -g @keber/visual-explainer-skill
+
+# 2. In your project directory (where you want to use the skill)
+cd my-project
+visual-explainer install --skills
+
+# 3. Verify the skill was installed
+Test-Path .github\skills\visual-explainer\SKILL.md
+```
+
+GitHub Copilot and Claude Code discover the skill automatically from `.github/skills/`.
+
+### Configuring API keys (PowerShell)
+
+```powershell
+# Set for the current session
+$env:OPENAI_API_KEY = 'sk-...'    # from https://platform.openai.com/api-keys
+# or
+$env:GEMINI_API_KEY = 'AIza...'   # from https://aistudio.google.com/apikey
+
+# Persist in your PowerShell profile (equivalent to ~/.bashrc)
+Add-Content $PROFILE "`n`$env:OPENAI_API_KEY = 'sk-...'"
+# or
+Add-Content $PROFILE "`n`$env:GEMINI_API_KEY = 'AIza...'"
+```
+
+### Usage from GitHub Copilot (VS Code)
+
+Once installed, use the skill normally:
+
+```
+/visual-explainer How DNS resolution works
+/visual-explainer --style infographic How machine learning models are trained
+/visual-explainer --style diagram --complexity detailed Kubernetes pod networking
+/visual-explainer --style mindmap The principles of object-oriented programming
+/visual-explainer --backend gemini How the water cycle works
+```
+
+The agent analyzes the content, builds a detailed prompt, and calls the PowerShell script:
+
+```powershell
+& '.github/skills/visual-explainer/scripts/visual-explainer.ps1' `
+    -PromptFile "$env:TEMP\ve-prompt-<timestamp>.txt" `
+    -Style      infographic `
+    -Size       1024x1536 `
+    -Output     './' `
+    -Prefix     'visual' `
+    -Backend    auto
+```
+
+### Manual verification (testing the script directly)
+
+```powershell
+# Create a test prompt file
+$promptFile = "$env:TEMP\ve-test.txt"
+Set-Content -Path $promptFile -Value "Create a simple infographic about the TLS handshake process" -Encoding UTF8
+
+# Run the script
+& '.github\skills\visual-explainer\scripts\visual-explainer.ps1' `
+    -PromptFile $promptFile `
+    -Style      infographic `
+    -Output     "." `
+    -Prefix     "test"
+
+# Verify the PNG was generated
+Test-Path .\test-1.png
+```
+
+### Additional Makefile targets
+
+| Target | Description |
+|--------|-------------|
+| `make install-skills` | Install the skill to `.github/skills/` in the current directory |
+| `make npm-pack` | Pack the npm module (`@keber/visual-explainer-skill`) |
+
+---
 # Visual Explainer Skill
 
 A Claude Code skill that converts any content into stunning visual explanations — whiteboard sketches, professional infographics, presentation slides, technical diagrams, mind maps, and UI wireframe mockups — powered by OpenAI's gpt-image-1.5 or Google Gemini's Nano Banana 2.
@@ -530,108 +636,5 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
-## GitHub Copilot / VS Code
 
-> **Fork of [ericblue/visual-explainer-skill](https://github.com/ericblue/visual-explainer-skill)** by [Eric Blue](https://eric-blue.com).
-> This fork is a port for **GitHub Copilot (VS Code)** using **PowerShell 5.1+** instead of bash + curl + jq.
-> The original skill, style templates, and examples are Eric Blue's work — this repository adapts the execution layer for Windows and VS Code.
-
-This section covers installation and usage of the skill in **GitHub Copilot (VS Code)** with **PowerShell 5.1+**, via the `@keber/visual-explainer-skill` npm package.
-
-### Differences from the original skill
-
-| Aspect | Original (Claude Code) | This fork (VS Code) |
-|--------|------------------------|----------------------|
-| Runtime | bash + curl + jq | PowerShell 5.1+ |
-| Install | `make install` | `npm install -g @keber/visual-explainer-skill` |
-| Discovery | `~/.claude/commands/` | `.github/skills/visual-explainer/` |
-| Multi-frame | ✅ supported | ⏳ out of MVP |
-| `--from mermaid` | ✅ supported | ⏳ out of MVP |
-| `--style mockup` | ✅ supported | ⏳ out of MVP |
-| Backends | OpenAI, Gemini | OpenAI gpt-image-1.5, Gemini gemini-2.0-flash-preview-image-generation |
-
-### Requirements
-
-- **PowerShell 5.1+** (included in Windows 10/11; PS 7+ recommended for better performance)
-- **Node.js 16+** (for the install CLI)
-- **OPENAI_API_KEY** or **GEMINI_API_KEY** set as an environment variable
-
-### Installation
-
-```powershell
-# 1. Install the CLI globally
-npm install -g @keber/visual-explainer-skill
-
-# 2. In your project directory (where you want to use the skill)
-cd my-project
-visual-explainer install --skills
-
-# 3. Verify the skill was installed
-Test-Path .github\skills\visual-explainer\SKILL.md
-```
-
-GitHub Copilot and Claude Code discover the skill automatically from `.github/skills/`.
-
-### Configuring API keys (PowerShell)
-
-```powershell
-# Set for the current session
-$env:OPENAI_API_KEY = 'sk-...'    # from https://platform.openai.com/api-keys
-# or
-$env:GEMINI_API_KEY = 'AIza...'   # from https://aistudio.google.com/apikey
-
-# Persist in your PowerShell profile (equivalent to ~/.bashrc)
-Add-Content $PROFILE "`n`$env:OPENAI_API_KEY = 'sk-...'"
-# or
-Add-Content $PROFILE "`n`$env:GEMINI_API_KEY = 'AIza...'"
-```
-
-### Usage from GitHub Copilot (VS Code)
-
-Once installed, use the skill normally:
-
-```
-/visual-explainer How DNS resolution works
-/visual-explainer --style infographic How machine learning models are trained
-/visual-explainer --style diagram --complexity detailed Kubernetes pod networking
-/visual-explainer --style mindmap The principles of object-oriented programming
-/visual-explainer --backend gemini How the water cycle works
-```
-
-The agent analyzes the content, builds a detailed prompt, and calls the PowerShell script:
-
-```powershell
-& '.github/skills/visual-explainer/scripts/visual-explainer.ps1' `
-    -PromptFile "$env:TEMP\ve-prompt-<timestamp>.txt" `
-    -Style      infographic `
-    -Size       1024x1536 `
-    -Output     './' `
-    -Prefix     'visual' `
-    -Backend    auto
-```
-
-### Manual verification (testing the script directly)
-
-```powershell
-# Create a test prompt file
-$promptFile = "$env:TEMP\ve-test.txt"
-Set-Content -Path $promptFile -Value "Create a simple infographic about the TLS handshake process" -Encoding UTF8
-
-# Run the script
-& '.github\skills\visual-explainer\scripts\visual-explainer.ps1' `
-    -PromptFile $promptFile `
-    -Style      infographic `
-    -Output     "." `
-    -Prefix     "test"
-
-# Verify the PNG was generated
-Test-Path .\test-1.png
-```
-
-### Additional Makefile targets
-
-| Target | Description |
-|--------|-------------|
-| `make install-skills` | Install the skill to `.github/skills/` in the current directory |
-| `make npm-pack` | Pack the npm module (`@keber/visual-explainer-skill`) |
 
